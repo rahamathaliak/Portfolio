@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Art Mamu · Digital Artist & Illustrator</title>
+<style>
+  :root{--accent:#ff7a45;--bg:#05060a;--bgrgb:5,6,10;--fg:#fff;--fgrgb:255,255,255;--card:#0d0f17}
+  body,#loader{transition:background .5s,color .5s}
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--fg);font-family:"Helvetica Neue",Arial,sans-serif}
+  canvas{position:fixed;inset:0;display:block}
+  header{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:28px 36px;z-index:5}
+  .logo{font-weight:700;letter-spacing:.35em;font-size:14px;cursor:pointer}
+  nav a{margin-left:28px;font-size:12px;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;opacity:.7;transition:opacity .3s}
+  nav a:hover{opacity:1}
+  #label{position:fixed;left:36px;bottom:36px;z-index:5;pointer-events:none;transition:opacity .4s,transform .4s;opacity:0;transform:translateY(10px)}
+  #label.on{opacity:1;transform:none}
+  #label h2{font-size:clamp(26px,4vw,52px);font-weight:300;letter-spacing:.04em}
+  #label p{font-size:12px;letter-spacing:.25em;text-transform:uppercase;opacity:.6;margin-top:8px}
+  #hint{position:fixed;right:36px;bottom:36px;z-index:5;font-size:11px;letter-spacing:.25em;text-transform:uppercase;opacity:.5;text-align:right;pointer-events:none}
+  #bar{position:fixed;right:0;top:0;width:2px;height:0;background:var(--fg);z-index:6;opacity:.6}
+  #loader{position:fixed;inset:0;background:var(--bg);z-index:20;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 1s;letter-spacing:.5em;font-size:13px}
+  #loader span{margin-top:18px;opacity:.5;letter-spacing:.2em}
+  .panel{position:fixed;inset:0;z-index:15;background:rgba(var(--bgrgb),.92);display:none;align-items:center;justify-content:center;padding:30px;cursor:pointer}
+  .panel.on{display:flex;animation:f .5s}
+  @keyframes f{from{opacity:0}to{opacity:1}}
+  #view{overflow:auto;align-items:flex-start;cursor:default}
+  .detail{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:48px;max-width:1100px;width:100%;margin:auto;padding:70px 0 40px}
+  .dimg{display:flex;align-items:center;justify-content:center}
+  .dimg img{max-width:100%;max-height:78vh;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+  .dtxt .cnt{font-size:11px;letter-spacing:.3em;opacity:.5;text-transform:uppercase}
+  .dtxt h1{font-weight:300;font-size:clamp(30px,4vw,54px);margin:12px 0 22px;letter-spacing:.03em}
+  .meta{display:grid;grid-template-columns:auto 1fr;gap:8px 22px;font-size:13px;padding:16px 0;border-top:1px solid rgba(var(--fgrgb),.15);border-bottom:1px solid rgba(var(--fgrgb),.15)}
+  .meta b{font-weight:400;opacity:.5;letter-spacing:.2em;text-transform:uppercase;font-size:11px;padding-top:2px}
+  .dtxt h3{font-size:11px;letter-spacing:.3em;text-transform:uppercase;opacity:.5;font-weight:400;margin:22px 0 8px}
+  .dtxt p{font-weight:300;line-height:1.8;font-size:15px;opacity:.9}
+  .btns{margin-top:30px;display:flex;gap:12px;flex-wrap:wrap}
+  .btns button{background:none;border:1px solid rgba(var(--fgrgb),.35);color:var(--fg);padding:11px 20px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:.3s}
+  .btns button:hover{background:var(--fg);color:var(--bg)}
+  .steps{grid-column:1/-1;margin-top:34px;padding-top:26px;border-top:1px solid rgba(var(--fgrgb),.15)}
+  .steps>h3{font-size:11px;letter-spacing:.3em;text-transform:uppercase;opacity:.5;font-weight:400}
+  .sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:26px;margin-top:18px}
+  .sw{aspect-ratio:4/3;overflow:hidden;background:var(--card);margin-bottom:12px}
+  .sw img{width:100%;height:100%;object-fit:cover;transition:transform .6s}
+  .step:hover .sw img{transform:scale(1.06)}
+  .sph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;text-align:center;padding:14px;font-size:11px;letter-spacing:.1em;opacity:.5;border:1px dashed rgba(var(--fgrgb),.25)}
+  .sn{font-size:11px;letter-spacing:.3em;opacity:.5;text-transform:uppercase}
+  .step h4{font-weight:400;font-size:17px;margin:6px 0}
+  .step p{font-weight:300;font-size:14px;line-height:1.7;opacity:.85}
+  @media(max-width:800px){.detail{grid-template-columns:1fr;gap:26px;padding-top:80px}}
+  .about{max-width:560px;cursor:default;line-height:1.8;font-size:16px;font-weight:300}
+  .about h1{font-weight:300;font-size:34px;letter-spacing:.1em;margin-bottom:18px}
+  .about a{color:var(--fg)}
+
+  nav a.cta{opacity:1;background:var(--accent);color:#0b0c12;padding:9px 22px;border-radius:999px;font-weight:700;transition:transform .3s,box-shadow .3s}
+  nav a.cta:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(255,122,69,.45)}
+  #contact{overflow:auto;align-items:flex-start}
+  #contact .about{margin:auto;width:100%;padding:60px 0 30px}
+  .contact h1{margin-bottom:10px}
+  .crows{display:grid;grid-template-columns:auto 1fr;gap:10px 24px;margin:22px 0;padding:18px 0;border-top:1px solid rgba(var(--fgrgb),.15);border-bottom:1px solid rgba(var(--fgrgb),.15);font-size:15px}
+  .crows b{font-weight:400;opacity:.5;letter-spacing:.2em;text-transform:uppercase;font-size:11px;padding-top:3px}
+  .contact form{display:grid;gap:12px}
+  .contact input,.contact textarea{width:100%;background:transparent;border:1px solid rgba(var(--fgrgb),.25);color:var(--fg);padding:13px 15px;font:inherit;font-size:14px;outline:none;transition:border-color .3s}
+  .contact input:focus,.contact textarea:focus{border-color:var(--accent)}
+  .send{justify-self:start;background:var(--accent);color:#0b0c12;border:0;padding:13px 28px;border-radius:999px;font-weight:700;font-size:12px;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:transform .3s,box-shadow .3s}
+  .send:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(255,122,69,.45)}
+  .socials{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px;align-items:center}
+  .socials a{border:1px solid rgba(var(--fgrgb),.3);border-radius:999px;padding:8px 18px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;transition:.3s}
+  .socials a:hover{background:var(--fg);color:var(--bg)}
+  .socials .x{margin-left:auto;border:0;opacity:.5;cursor:pointer}
+
+  .lnk{display:none;margin-top:22px;background:var(--accent);color:#0b0c12;padding:12px 24px;border-radius:999px;font-weight:700;font-size:12px;letter-spacing:.2em;text-transform:uppercase;text-decoration:none}
+  .ggrid{column-width:300px;column-gap:20px;margin-top:18px}
+  .ggrid figure{break-inside:avoid;margin:0 0 20px;overflow:hidden;background:var(--card)}
+  .ggrid img{width:100%;display:block;cursor:zoom-in;transition:transform .6s}
+  .ggrid figure:hover img{transform:scale(1.04)}
+  .ggrid figcaption{font-size:13px;opacity:.75;padding:10px 12px 12px;line-height:1.6}
+  #zoom{background:rgba(var(--bgrgb),.96);cursor:zoom-out}
+  #zoom img{max-width:94vw;max-height:92vh;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+  .sph{opacity:.75;font-size:12px;letter-spacing:.15em;text-transform:uppercase}
+  .sph small{display:block;margin-top:8px;opacity:.7;font-size:10px;letter-spacing:.04em;text-transform:none;word-break:break-all}
+  .ggrid .sph{height:auto;aspect-ratio:4/3}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo" id="home">ART MAMU</div>
+  <nav><a id="nWork">Work</a><a id="nAbout">About</a><a id="nContact" class="cta">Contact</a></nav>
+</header>
+<div id="label"><h2></h2><p></p></div>
+<div id="hint">Scroll to travel<br>Move mouse to explore<br>Click a project</div>
+<div id="bar"></div>
+<div id="loader">ART MAMU<span id="pct">0%</span></div>
+<div class="panel" id="view"><div class="detail">
+  <div class="dimg"><img id="vimg" alt=""></div>
+  <div class="dtxt">
+    <div class="cnt" id="vc"></div>
+    <h1 id="vt"></h1>
+    <div class="meta" id="vm"></div>
+    <h3>About the project</h3><p id="va"></p>
+    <h3>Idea &amp; process</h3><p id="vp"></p>
+    <a class="lnk" id="vl" target="_blank" rel="noopener"></a>
+    <div class="btns"><button id="bPrev">← Prev</button><button id="bBack">Back to gallery</button><button id="bNext">Next →</button></div>
+  </div>
+  <div class="steps sec"><h3>Project images</h3><div class="ggrid" id="vg"></div></div>
+  <div class="steps sec"><h3>Step by step process</h3><div class="sgrid" id="vs"></div></div>
+  <div class="steps"><div class="btns"><button id="bPrev2">← Prev project</button><button id="bBack2">Back to gallery</button><button id="bNext2">Next project →</button></div></div>
+</div></div>
+<div class="panel" id="contact"><div class="about contact">
+  <h1 id="cHead"></h1>
+  <p id="cIntro"></p>
+  <div class="crows" id="cRows"></div>
+  <form id="cForm">
+    <input id="cName" placeholder="Your name" required>
+    <input id="cMail" type="email" placeholder="Your email" required>
+    <textarea id="cMsg" rows="4" placeholder="Tell me about your project" required></textarea>
+    <button type="submit" class="send">Send message</button>
+  </form>
+  <div class="socials" id="cSoc"></div>
+</div></div>
+<div class="panel" id="about"><div class="about">
+  <h1>ART MAMU</h1>
+  <p>EDIT ME: Write 2–3 lines about yourself here. Digital artist and illustrator creating posters, hand-illustrated music videos and animated stories rooted in rural life and human emotion.</p>
+  <p style="margin-top:18px"><a href="mailto:youremail@example.com">youremail@example.com</a></p>
+</div></div>
+
+<div class="panel" id="zoom"><img id="zimg" alt=""></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/* ============ EDIT THIS LIST: your projects ============
+   Each card in the galaxy is one project and opens its own project page.
+   FOLDERS (put these next to index.html):
+     images/project1.jpg            <- cover image shown in the galaxy
+     images/project1/image1.jpg     <- more project images (image1 ... image6)
+     images/project1/step1.jpg      <- process step images (step1 ... step4)
+   Same pattern for project2, project3 and so on.
+   Empty boxes show the file name to use. Set SHOW_EMPTY_SLOTS to false to hide the ones you don't fill.
+
+   OPTIONAL (add inside any project, after "process"):
+     link:{label:"Watch on YouTube", url:"https://..."},
+     gallery:[{src:"images/project1/a.jpg", caption:"Short caption"}, ...],
+     steps:[{title:"Sketch", text:"...", img:"images/project1/sketch.jpg"}, ...]
+   ========================================================= */
+const PROJECTS = [
+  {title:"Project One", year:"2024", type:"Poster design", src:"images/project1.jpg",
+   client:"Client or studio name", role:"Poster design & illustration", tools:"Procreate, Photoshop",
+   about:"EDIT ME: Explain what this project is, who it was made for and what it communicates.",
+   process:"EDIT ME: Explain your idea, references, sketches and how you made it."},
+  {title:"Project Two", year:"2024", type:"Music video", src:"images/project2.jpg",
+   client:"Client or studio name", role:"Hand-illustrated music video", tools:"Procreate, After Effects",
+   about:"EDIT ME: Explain what this project is, who it was made for and what it communicates.",
+   process:"EDIT ME: Explain your idea, references, sketches and how you made it."},
+  {title:"Project Three", year:"2023", type:"Illustration", src:"images/project3.jpg",
+   client:"Personal project", role:"Illustration", tools:"Procreate",
+   about:"EDIT ME: Explain what this project is, who it was made for and what it communicates.",
+   process:"EDIT ME: Explain your idea, references, sketches and how you made it."},
+  {title:"Project Four", year:"2023", type:"Poster design", src:"images/project4.jpg",
+   client:"Client or studio name", role:"Poster design & illustration", tools:"Procreate, Photoshop",
+   about:"EDIT ME: Explain what this project is, who it was made for and what it communicates.",
+   process:"EDIT ME: Explain your idea, references, sketches and how you made it."},
+  {title:"Project Five", year:"2022", type:"Animated episode", src:"images/project5.jpg",
+   client:"Studio name", role:"Character design & animation", tools:"Procreate, After Effects",
+   about:"EDIT ME: Explain what this project is, who it was made for and what it communicates.",
+   process:"EDIT ME: Explain your idea, references, sketches and how you made it."},
+  {title:"Project Six", year:"2022", type:"Poster design", src:"images/project6.jpg",
+   client:"Client or studio name", role:"Poster design & illustration", tools:"Procreate, Photoshop",
+   about:"EDIT ME: Explain what this project is, who it was made for and what it communicates.",
+   process:"EDIT ME: Explain your idea, references, sketches and how you made it."},
+  {title:"Project Seven", year:"2021", type:"Illustration", src:"images/project7.jpg",
+   client:"Personal project", role:"Illustration", tools:"Procreate",
+   about:"EDIT ME: Explain what this project is, who it was made for and what it communicates.",
+   process:"EDIT ME: Explain your idea, references, sketches and how you made it."},
+  {title:"Project Eight", year:"2020", type:"Music video", src:"images/project8.jpg",
+   client:"Client or studio name", role:"Hand-illustrated music video", tools:"Procreate, After Effects",
+   about:"EDIT ME: Explain what this project is, who it was made for and what it communicates.",
+   process:"EDIT ME: Explain your idea, references, sketches and how you made it."}
+];
+
+/* ====== CONTACT INFO: edit the text inside the quotes ====== */
+const CONTACT = {
+  heading:"Let's work together",
+  intro:"EDIT ME: Tell visitors what you offer, for example posters, illustrations, music video art and animated episodes, and how soon you reply.",
+  email:"youremail@example.com",
+  phone:"+91 00000 00000",
+  location:"City, Country",
+  links:[
+    {name:"Behance",   url:"https://www.behance.net/yourname"},
+    {name:"LinkedIn",  url:"https://www.linkedin.com/in/yourname"},
+    {name:"Instagram", url:"https://www.instagram.com/yourname"}
+  ]
+};
+
+/* ====== PROJECT PAGE SETTINGS ======
+   GALLERY_MAX: how many extra images per project it looks for (image1.jpg, image2.jpg ...)
+   SHOW_EMPTY_SLOTS: true = empty image boxes are shown with the file name to use (best while
+   you set up). Set it to false before you upload so boxes you did not fill are hidden. */
+const GALLERY_MAX = 6, SHOW_EMPTY_SLOTS = true;
+const STEP_TEXT = [
+  {title:"Idea & rough sketch", text:"EDIT ME: Describe the first idea, references and rough sketch."},
+  {title:"Line art", text:"EDIT ME: Describe how you cleaned up the sketch into final line work."},
+  {title:"Colour & light", text:"EDIT ME: Describe your colour choices, mood and lighting."},
+  {title:"Final touches", text:"EDIT ME: Describe the text, texture and finishing details."}
+];
+PROJECTS.forEach((p,i)=>{
+  if(!p.steps) p.steps = STEP_TEXT.map((s,k)=>({title:s.title, text:s.text, img:`images/project${i+1}/step${k+1}.jpg`}));
+  if(!p.gallery) p.gallery = Array.from({length:GALLERY_MAX},(_,k)=>({src:`images/project${i+1}/image${k+1}.jpg`}));
+});
+/* ====================================================== */
+
+const $ = id => document.getElementById(id);
+const N = PROJECTS.length, GAP = 4.2, H = 3.4;
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x05060a);
+scene.fog = new THREE.Fog(0x05060a, 8, 30);
+const camera = new THREE.PerspectiveCamera(60, innerWidth/innerHeight, .1, 100);
+const renderer = new THREE.WebGLRenderer({antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setSize(innerWidth, innerHeight);
+document.body.prepend(renderer.domElement);
+
+/* floating particles */
+const pc = 2200, pp = new Float32Array(pc*3);
+for(let i=0;i<pc;i++){pp[i*3]=(Math.random()-.5)*34;pp[i*3+1]=(Math.random()-.5)*20;pp[i*3+2]=12-Math.random()*(N*GAP+30)}
+const pg = new THREE.BufferGeometry();
+pg.setAttribute('position', new THREE.BufferAttribute(pp,3));
+const pcol = new Float32Array(pc*3);
+for(let i=0;i<pc;i++){ const w=.5+Math.random()*.5, k=Math.random(); pcol[i*3]=w*(k<.2?1:.86); pcol[i*3+1]=w*.92; pcol[i*3+2]=w*(k>.55?1:.8) }
+pg.setAttribute('color', new THREE.BufferAttribute(pcol,3));
+const dots = new THREE.Points(pg, new THREE.PointsMaterial({size:.05,vertexColors:true,transparent:true,opacity:.95,blending:THREE.AdditiveBlending,depthWrite:false}));
+/* faint dust band (milky way) */
+const dn = 2200, dp = new Float32Array(dn*3);
+for(let i=0;i<dn;i++){ const t=Math.random(), off=(Math.random()+Math.random()+Math.random()-1.5)*3.2;
+  dp[i*3]=-20+t*40; dp[i*3+1]=-9+t*16+off; dp[i*3+2]=-6-Math.random()*(N*GAP+16) }
+const dustG = new THREE.BufferGeometry(); dustG.setAttribute('position', new THREE.BufferAttribute(dp,3));
+scene.add(new THREE.Points(dustG, new THREE.PointsMaterial({size:.03,color:0x9a8672,transparent:true,opacity:.35,blending:THREE.AdditiveBlending,depthWrite:false})));
+scene.add(dots);
+
+
+/* placeholder texture */
+function placeholder(p,i){
+  const c=document.createElement('canvas'); c.width=480; c.height=640;
+  const x=c.getContext('2d'), g=x.createLinearGradient(0,0,480,640);
+  g.addColorStop(0,`hsl(${(i*47+210)%360},65%,45%)`); g.addColorStop(1,`hsl(${(i*47+270)%360},70%,18%)`);
+  x.fillStyle=g; x.fillRect(0,0,480,640);
+  x.fillStyle='rgba(255,255,255,.85)'; x.font='300 34px Arial'; x.textAlign='center';
+  x.fillText(p.title,240,330); x.font='16px Arial'; x.fillText('add images/'+p.src.split('/').pop(),240,370);
+  return c;
+}
+
+/* poster planes */
+const meshes = [], loader = new THREE.TextureLoader();
+let loaded = 0;
+const done = () => { loaded++; $('pct').textContent = Math.round(loaded/N*100)+'%';
+  if(loaded>=N){ setTimeout(()=>{ $('loader').style.opacity=0; setTimeout(()=>$('loader').remove(),1000) },300) } };
+PROJECTS.forEach((p,i)=>{
+  const ph = placeholder(p,i);
+  const tex = new THREE.CanvasTexture(ph);
+  const mat = new THREE.MeshBasicMaterial({map:tex,transparent:true,side:THREE.DoubleSide});
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(H*.75,H), mat);
+  const side = i%2?1:-1;
+  m.userData = {i, p, bx: side*(2.2+Math.random()*.8), by:(Math.random()-.5)*1.6, s:1, ts:1, img:p.src, url:null, ph};
+  m.position.set(m.userData.bx, m.userData.by, -i*GAP);
+  scene.add(m); meshes.push(m);
+  loader.load(p.src, t=>{
+    mat.map = t; mat.needsUpdate = true;
+    const a = t.image.width/t.image.height; m.scale.set(a/.75,1,1); m.userData.sx = a/.75; m.userData.url = p.src;
+    done();
+  }, undefined, done);
+});
+
+/* interaction state */
+let mx=0,my=0,target=0,pos=0,hover=null,busy=false;
+const maxZ = (N-1)*GAP;
+addEventListener('mousemove',e=>{mx=e.clientX/innerWidth*2-1; my=-(e.clientY/innerHeight*2-1)});
+addEventListener('wheel',e=>{target=Math.max(0,Math.min(maxZ+2,target+e.deltaY*.012))},{passive:true});
+let ty=null, moved=0;
+addEventListener('touchstart',e=>{ty=e.touches[0].clientY;moved=0; mx=e.touches[0].clientX/innerWidth*2-1; my=-(e.touches[0].clientY/innerHeight*2-1)},{passive:true});
+addEventListener('touchmove',e=>{const y=e.touches[0].clientY; moved+=Math.abs(ty-y); target=Math.max(0,Math.min(maxZ+2,target+(ty-y)*.03)); ty=y},{passive:true});
+addEventListener('keydown',e=>{ if(/INPUT|TEXTAREA/.test(e.target.tagName)&&e.key!=='Escape')return; if(e.key==='ArrowDown')target=Math.min(maxZ+2,target+GAP); if(e.key==='ArrowUp')target=Math.max(0,target-GAP); if(e.key==='Escape'){ if($('zoom').classList.contains('on')) $('zoom').classList.remove('on'); else closeAll() }
+  if($('view').classList.contains('on')){ if(e.key==='ArrowRight')openDetail(cur+1); if(e.key==='ArrowLeft')openDetail(cur-1) } });
+
+const ray = new THREE.Raycaster(), v2 = new THREE.Vector2();
+function pick(){ v2.set(mx,my); ray.setFromCamera(v2,camera);
+  const hit = ray.intersectObjects(meshes)[0]; return hit ? hit.object : null; }
+addEventListener('click',e=>{
+  if(e.target.closest('header,.panel')||moved>10) return;
+  if(e.type==='click' && 'ontouchstart' in window){ mx=e.clientX/innerWidth*2-1; my=-(e.clientY/innerHeight*2-1) }
+  const m = pick(); if(!m) return;
+  if(busy) return; busy = true;
+  const d = m.userData; d.s = .86; d.force = 1.28;
+  setTimeout(()=>{ d.force = 0 }, 260);
+  setTimeout(()=>{ openDetail(d.i); busy = false }, 430);
+});
+function closeAll(){ document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on')); if(/^#project-/.test(location.hash)) history.replaceState(null,'',location.pathname+location.search) }
+let cur = 0;
+/* shows only the images that exist; hidden sections stay hidden until one image loads */
+function fillMedia(box, items, build){
+  box.innerHTML = ''; const sec = box.closest('.sec'); sec.style.display = SHOW_EMPTY_SLOTS ? '' : 'none';
+  items.forEach(it=>{
+    const card = build(it), im = card.querySelector('img');
+    im.onload = ()=>{ sec.style.display = '' };
+    im.onerror = ()=>{
+      if(SHOW_EMPTY_SLOTS){ const ph = document.createElement('div'); ph.className = 'sph'; ph.innerHTML = '<span>+ Add image<small>'+it.src+'</small></span>'; im.replaceWith(ph) }
+      else card.remove();
+    };
+    box.appendChild(card); im.src = it.src;
+  });
+}
+
+function openDetail(i,fromHash){
+  const wasOpen = $('view').classList.contains('on');
+  cur = (i+N)%N;
+  const p = PROJECTS[cur], d = meshes[cur].userData;
+  $('vimg').src = d.url || d.ph.toDataURL();
+  $('vc').textContent = String(cur+1).padStart(2,'0')+' / '+String(N).padStart(2,'0');
+  $('vt').textContent = p.title;
+  $('vm').innerHTML = [['Type',p.type],['Year',p.year],['Client',p.client],['Role',p.role],['Tools',p.tools]]
+    .filter(r=>r[1]).map(r=>'<b>'+r[0]+'</b><span>'+r[1]+'</span>').join('');
+  $('va').textContent = p.about || ''; $('vp').textContent = p.process || '';
+  const L = $('vl');
+  if(p.link && p.link.url){ L.href = p.link.url; L.textContent = (p.link.label||'View project')+' ↗'; L.style.display = 'inline-block' } else L.style.display = 'none';
+  fillMedia($('vg'), p.gallery||[], it=>{
+    const f = document.createElement('figure'), im = document.createElement('img'); im.alt = it.caption||p.title;
+    im.onclick = ()=>{ $('zimg').src = im.src; $('zoom').classList.add('on') };
+    f.appendChild(im);
+    if(it.caption){ const c = document.createElement('figcaption'); c.textContent = it.caption; f.appendChild(c) }
+    return f;
+  });
+  fillMedia($('vs'), (p.steps||[]).map((st,k)=>({src:st.img,k,st})), it=>{
+    const c = document.createElement('div'); c.className = 'step';
+    const w = document.createElement('div'); w.className = 'sw'; w.appendChild(document.createElement('img'));
+    const n = document.createElement('div'); n.className = 'sn'; n.textContent = 'Step '+String(it.k+1).padStart(2,'0');
+    const t = document.createElement('h4'); t.textContent = it.st.title;
+    const x = document.createElement('p'); x.textContent = it.st.text;
+    c.append(w,n,t,x); return c;
+  });
+  $('view').scrollTop = 0; $('view').classList.add('on');
+  if(!fromHash){ const h = '#project-'+(cur+1); if(location.hash!==h) history[wasOpen?'replaceState':'pushState'](null,'',h) }
+}
+$('bPrev').onclick = ()=>openDetail(cur-1);
+$('bNext').onclick = $('bNext2').onclick = ()=>openDetail(cur+1);
+$('bPrev2').onclick = ()=>openDetail(cur-1);
+$('bBack').onclick = $('bBack2').onclick = closeAll;
+document.querySelectorAll('.panel').forEach(p=>p.addEventListener('click',e=>{ if(!e.target.closest('.about,.detail')) closeAll() }));
+$('nAbout').onclick = ()=>$('about').classList.add('on');
+/* contact panel */
+(function(){
+  const C = CONTACT;
+  $('cHead').textContent = C.heading; $('cIntro').textContent = C.intro;
+  const rows = [['Email', C.email ? 'mailto:'+C.email : '', C.email], ['Phone', C.phone ? 'tel:'+C.phone.replace(/\s/g,'') : '', C.phone], ['Location', '', C.location]];
+  $('cRows').innerHTML = rows.filter(r=>r[2]).map(r=>'<b>'+r[0]+'</b>'+(r[1]?'<a href="'+r[1]+'">'+r[2]+'</a>':'<span>'+r[2]+'</span>')).join('');
+  $('cSoc').innerHTML = C.links.map(l=>'<a href="'+l.url+'" target="_blank" rel="noopener">'+l.name+'</a>').join('') + '<a class="x" id="cClose">Close</a>';
+  $('cClose').onclick = closeAll;
+  $('nContact').onclick = ()=>$('contact').classList.add('on');
+  $('cForm').onsubmit = e=>{
+    e.preventDefault();
+    const n = $('cName').value, body = $('cMsg').value + '\n\n- ' + n + ' (' + $('cMail').value + ')';
+    location.href = 'mailto:' + C.email + '?subject=' + encodeURIComponent('Portfolio enquiry from ' + n) + '&body=' + encodeURIComponent(body);
+  };
+})();
+
+$('nWork').onclick = $('home').onclick = ()=>{closeAll(); target=0};
+
+/* render loop */
+const clock = new THREE.Clock();
+function loop(){
+  requestAnimationFrame(loop);
+  const t = clock.getElapsedTime();
+  pos += (target-pos)*.06;
+  camera.position.z += (6-pos-camera.position.z)*.12;
+  camera.position.x += (mx*1.4-camera.position.x)*.05;
+  camera.position.y += (my*.9-camera.position.y)*.05;
+  camera.lookAt(mx*.6, my*.4, camera.position.z-6);
+  dots.rotation.z = t*.012;  dots.position.x = -mx*.6; dots.position.y = -my*.4;
+
+  const h = pick();
+  if(h!==hover){
+    hover=h; document.body.style.cursor=h?'pointer':'default';
+    const L=$('label'); if(h){L.querySelector('h2').textContent=h.userData.p.title; L.querySelector('p').textContent=(h.userData.p.type||'Project')+'  ·  '+h.userData.p.year; L.classList.add('on')} else L.classList.remove('on');
+  }
+  meshes.forEach((m,i)=>{
+    const d=m.userData, k = d.force || (m===hover?1.12:1);
+    d.s += (k-d.s)*.1;
+    const sx = d.sx||1;
+    m.scale.set(sx*d.s, d.s, 1);
+    m.position.y = d.by + Math.sin(t*.8+i*1.7)*.18;
+    m.position.x = d.bx + Math.sin(t*.4+i)*.12;
+    m.rotation.y += ((-d.bx*.06 + mx*.25)-m.rotation.y)*.05;
+    m.rotation.x += ((my*.12)-m.rotation.x)*.05;
+  });
+  $('bar').style.height = (pos/(maxZ+2)*100)+'vh';
+  renderer.render(scene,camera);
+}
+loop();
+addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
+
+/* each project has its own link (#project-1, #project-2 ...) and the browser Back button works */
+$('zoom').addEventListener('click', e=>{ e.stopImmediatePropagation(); $('zoom').classList.remove('on') }, true);
+addEventListener('popstate', ()=>{
+  const m = location.hash.match(/^#project-(\d+)$/);
+  if(m && PROJECTS[m[1]-1]) openDetail(m[1]-1, true);
+  else document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+});
+{ const m = location.hash.match(/^#project-(\d+)$/); if(m && PROJECTS[m[1]-1]) openDetail(m[1]-1, true) }
+</script>
+</body>
+</html>
