@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>Art Mamu · Digital Artist & Illustrator</title>
+<title>Design Culture · Portfolio</title>
 <style>
   :root{--accent:#ff7a45;--bg:#05060a;--bgrgb:5,6,10;--fg:#fff;--fgrgb:255,255,255;--card:#0d0f17}
   body,#loader{transition:background .5s,color .5s}
@@ -21,7 +21,22 @@
   #hint{position:fixed;right:36px;bottom:36px;z-index:5;font-size:11px;letter-spacing:.25em;text-transform:uppercase;opacity:.5;text-align:right;pointer-events:none}
   #bar{position:fixed;right:0;top:0;width:2px;height:0;background:var(--fg);z-index:6;opacity:.6}
   #loader{position:fixed;inset:0;background:var(--bg);z-index:20;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 1s;letter-spacing:.5em;font-size:13px}
-  #loader span{margin-top:18px;opacity:.5;letter-spacing:.2em}
+  .aq{position:relative;width:170px;height:170px}
+  .ring{position:absolute;inset:0;border-radius:50%;border:1px dashed rgba(255,255,255,.2);animation:spin 16s linear infinite}
+  .ring.r2{inset:24px;border-style:solid;border-color:rgba(120,170,255,.22);animation-direction:reverse;animation-duration:10s}
+  .spin{position:absolute;inset:0;animation:spin 5s linear infinite}
+  .spin.s1{animation-duration:9s} .spin.s2{animation-duration:13s;animation-direction:reverse}
+  .aq i{position:absolute;width:var(--s,8px);height:var(--s,8px);border-radius:50%;border:1px solid rgba(180,215,255,.85);background:rgba(180,215,255,.12);box-shadow:inset -1px -1px 2px rgba(255,255,255,.35)}
+  .aq i.rise{bottom:62px;animation:rise 3s ease-in infinite;opacity:0}
+  .fish{position:absolute;top:-4px;left:50%;width:46px;margin-left:-23px;fill:var(--accent);filter:drop-shadow(0 0 8px rgba(255,122,69,.55))}
+  .fish .tail{transform-origin:17px 15px;animation:wag .35s ease-in-out infinite alternate}
+  .lt{margin-top:30px;font-size:13px;letter-spacing:.5em;font-weight:600}
+  .ls{margin-top:30px;font-size:11px;letter-spacing:.3em;text-transform:uppercase;opacity:.55}
+  .ls b{font-weight:400;animation:dot 1.2s infinite} .ls b:nth-child(2){animation-delay:.2s} .ls b:nth-child(3){animation-delay:.4s}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes wag{from{transform:rotate(-16deg)}to{transform:rotate(16deg)}}
+  @keyframes rise{0%{transform:translateY(0) scale(.4);opacity:0}15%{opacity:.95}100%{transform:translateY(-70px) scale(1.1);opacity:0}}
+  @keyframes dot{0%,100%{opacity:.15}50%{opacity:1}}
   .panel{position:fixed;inset:0;z-index:15;background:rgba(var(--bgrgb),.92);display:none;align-items:center;justify-content:center;padding:30px;cursor:pointer}
   .panel.on{display:flex;animation:f .5s}
   @keyframes f{from{opacity:0}to{opacity:1}}
@@ -81,18 +96,51 @@
   .sph{opacity:.75;font-size:12px;letter-spacing:.15em;text-transform:uppercase}
   .sph small{display:block;margin-top:8px;opacity:.7;font-size:10px;letter-spacing:.04em;text-transform:none;word-break:break-all}
   .ggrid .sph{height:auto;aspect-ratio:4/3}
+
+  html,body{overscroll-behavior:none}
+  canvas{touch-action:none}
+  #about{overflow:auto;align-items:flex-start}
+  #about .about{margin:auto;width:100%;padding:70px 0 30px}
+  .about p{margin-bottom:14px}
+  .pclose{position:fixed;top:16px;right:16px;width:42px;height:42px;border-radius:50%;border:1px solid rgba(var(--fgrgb),.35);background:rgba(var(--bgrgb),.6);color:var(--fg);font-size:15px;cursor:pointer;z-index:3}
+  .pclose:hover{background:var(--fg);color:var(--bg)}
+  @media(max-width:700px){
+    header{padding:14px 16px;gap:8px;flex-wrap:wrap}
+    .logo{font-size:12px;letter-spacing:.2em}
+    nav a{margin-left:12px;font-size:10px;letter-spacing:.12em}
+    nav a.cta{padding:7px 14px}
+    #label{left:18px;right:18px;bottom:64px}
+    #hint{left:0;right:0;bottom:20px;text-align:center;font-size:10px}
+    .panel{padding:18px}
+    .about{font-size:15px}
+    .about h1{font-size:26px}
+    .lt{font-size:11px;letter-spacing:.4em}
+  }
+  #nSound{font-size:16px;letter-spacing:0;margin-left:0}
+  nav a.off{opacity:.35;text-decoration:line-through}
 </style>
 </head>
 <body>
 
 <header>
-  <div class="logo" id="home">Design Culture</div>
-  <nav><a id="nWork">Work</a><a id="nAbout">About</a><a id="nContact" class="cta">Contact</a></nav>
+  <div class="logo" id="home">DESIGN CULTURE</div>
+  <nav><a id="nSound" title="Sound on/off" aria-label="Sound on/off">♪</a><a id="nWork">Work</a><a id="nAbout">About</a><a id="nContact" class="cta">Contact</a></nav>
 </header>
 <div id="label"><h2></h2><p></p></div>
 <div id="hint">Scroll to travel<br>Move mouse to explore<br>Click a project</div>
 <div id="bar"></div>
-<div id="loader">Design Culture<span id="pct">0%</span></div>
+<div id="loader">
+  <div class="aq">
+    <div class="ring"></div><div class="ring r2"></div>
+    <div class="spin s1"><i style="--s:9px;top:34px;left:50%"></i><i style="--s:5px;top:60px;left:72%"></i><i style="--s:12px;bottom:30px;left:28%"></i></div>
+    <div class="spin s2"><i style="--s:7px;top:46px;left:34%"></i><i style="--s:11px;bottom:44px;left:66%"></i><i style="--s:4px;top:24px;left:78%"></i></div>
+    <i class="rise" style="--s:8px;left:46%;animation-delay:0s"></i>
+    <i class="rise" style="--s:5px;left:54%;animation-delay:.8s"></i>
+    <i class="rise" style="--s:10px;left:42%;animation-delay:1.5s"></i>
+    <i class="rise" style="--s:6px;left:58%;animation-delay:2.2s"></i>
+  </div>
+  <div class="ls">Loading<b>.</b><b>.</b><b>.</b></div>
+</div>
 <div class="panel" id="view"><div class="detail">
   <div class="dimg"><img id="vimg" alt=""></div>
   <div class="dtxt">
@@ -121,12 +169,12 @@
   <div class="socials" id="cSoc"></div>
 </div></div>
 <div class="panel" id="about"><div class="about">
-  <h1>ART MAMU</h1>
-  <p>I’m Pathan Rahamath Ali — an artist by passion, a designer by profession, and a storyteller at heart. I’m a Visual Designer and Illustrator with over seven years of experience transforming ideas into meaningful visual experiences. Currently, I work as a Visual Designer Lead with Deloitte, exploring the intersection of design, creativity, and communication.
-From a simple sketch to a complete brand identity, from imaginative characters to visual narratives, I believe every creative idea has a story waiting to be told. My work spans illustration, branding, digital art, graphic design, and visual storytelling, across both digital and print media.
-Beyond design, I’m passionate about exploring the world of storytelling through comics, storyboarding, animation, and filmmaking. My dream is to become a storyteller who creates worlds, builds memorable characters, and brings meaningful stories to life through visuals.
-For me, design is more than making things look beautiful. It is about problem solving.</p>
-  <p style="margin-top:18px"><a href="mailto:youremail@example.com">rahamathali.ak@gmail.com</a></p>
+  <h1>DESIGN CULTURE</h1>
+  <p>I’m Pathan Rahamath Ali — an artist by passion, a designer by profession, and a storyteller at heart. I’m a Visual Designer and Illustrator with over seven years of experience transforming ideas into meaningful visual experiences. Currently, I work as a Visual Designer Lead with Deloitte, exploring the intersection of design, creativity, and communication.</p>
+  <p>From a simple sketch to a complete brand identity, from imaginative characters to visual narratives, I believe every creative idea has a story waiting to be told. My work spans illustration, branding, digital art, graphic design, and visual storytelling, across both digital and print media.</p>
+  <p>Beyond design, I’m passionate about exploring the world of storytelling through comics, storyboarding, animation, and filmmaking. My dream is to become a storyteller who creates worlds, builds memorable characters, and brings meaningful stories to life through visuals.</p>
+  <p>For me, design is more than making things look beautiful. It is about problem solving.</p>
+  <p style="margin-top:18px"><a href="mailto:rahamathali.ak@gmail.com">rahamathali.ak@gmail.com</a></p>
 </div></div>
 
 <div class="panel" id="zoom"><img id="zimg" alt=""></div>
@@ -179,23 +227,19 @@ const PROJECTS = [
   {title:"Project Eight", year:"2020", type:"Music video", src:"images/project8.jpg",
    client:"Client or studio name", role:"Hand-illustrated music video", tools:"Procreate, After Effects",
    about:"EDIT ME: Explain what this project is, who it was made for and what it communicates.",
-   process:"EDIT ME: Explain your idea, references, sketches and how you made it."},
-  {title:"Project Nine", year:"2025", type:"Poster design", src:"images/project9.jpg",
-   client:"Client name", role:"Poster design & illustration", tools:"Procreate, Photoshop",
-   about:"Write what this project is and who it was made for.",
-   process:"Write your idea and how you made it."}
+   process:"EDIT ME: Explain your idea, references, sketches and how you made it."}
 ];
 
 /* ====== CONTACT INFO: edit the text inside the quotes ====== */
 const CONTACT = {
   heading:"Let's work together",
-  intro:"I’m a Visual Designer and Illustrator with over seven years of experience transforming ideas into meaningful visual experiences.",
+  intro:"EDIT ME: Tell visitors what you offer, for example posters, illustrations, music video art and animated episodes, and how soon you reply.",
   email:"rahamathali.ak@gmail.com",
-  phone:"+91 88856 01562",
-  location:"Hyderabad, India",
+  phone:"+91 00000 00000",
+  location:"City, Country",
   links:[
-    {name:"Behance",   url:"https://www.behance.net/artmamu"},
-    {name:"LinkedIn",  url:"https://www.linkedin.com/in/rahamath-ali-7411261b4/"},
+    {name:"Behance",   url:"https://www.behance.net/yourname"},
+    {name:"LinkedIn",  url:"https://www.linkedin.com/in/yourname"},
     {name:"Instagram", url:"https://www.instagram.com/yourname"}
   ]
 };
@@ -224,9 +268,17 @@ scene.background = new THREE.Color(0x05060a);
 scene.fog = new THREE.Fog(0x05060a, 8, 30);
 const camera = new THREE.PerspectiveCamera(60, innerWidth/innerHeight, .1, 100);
 const renderer = new THREE.WebGLRenderer({antialias:true});
-renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setPixelRatio(Math.min(devicePixelRatio, innerWidth<700?1.5:2));
 renderer.setSize(innerWidth, innerHeight);
 document.body.prepend(renderer.domElement);
+/* phone-friendly layout: wider view, cards pulled toward the centre and slightly smaller */
+const isTouch = matchMedia('(hover:none)').matches;
+let xs = 1, ms = 1;
+function layout(){
+  const a = innerWidth/innerHeight, phone = a < .9;
+  camera.fov = phone ? 74 : 60; xs = phone ? Math.max(.36, a*.9) : 1; ms = phone ? .8 : 1;
+  camera.aspect = a; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight);
+}
 
 /* floating particles */
 const pc = 2200, pp = new Float32Array(pc*3);
@@ -257,11 +309,68 @@ function placeholder(p,i){
   return c;
 }
 
+/* ===== soft space ambience: made live in the browser, no audio files, no copyright ===== */
+let soundHold = false;
+const Snd = (()=>{
+  let ctx, bus, voice = null, chime = 0, cur = -1, on = true;
+  try{ on = localStorage.getItem('dc-sound') !== 'off' }catch(e){}
+  /* each card has its own calm chord, so moving from card to card changes the mood */
+  const CH = [[110,164.81,246.94,329.63],[98,146.83,220,293.66],[130.81,196,261.63,392],
+              [110,164.81,220,277.18],[123.47,185,246.94,369.99],[98,146.83,196,246.94]];
+  function init(){
+    if(ctx) return true;
+    const AC = window.AudioContext || window.webkitAudioContext; if(!AC) return false;
+    ctx = new AC(); const master = ctx.createGain(); master.gain.value = .9; master.connect(ctx.destination);
+    bus = ctx.createGain(); const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 1800;
+    const dry = ctx.createGain(); dry.gain.value = .5;
+    const conv = ctx.createConvolver(), len = Math.floor(ctx.sampleRate*3.2), buf = ctx.createBuffer(2,len,ctx.sampleRate);
+    for(let c=0;c<2;c++){ const d = buf.getChannelData(c); for(let i=0;i<len;i++) d[i] = (Math.random()*2-1)*Math.pow(1-i/len,2.6) }
+    conv.buffer = buf; const wet = ctx.createGain(); wet.gain.value = .9;
+    bus.connect(lp); lp.connect(dry); dry.connect(master); lp.connect(conv); conv.connect(wet); wet.connect(master);
+    return true;
+  }
+  function start(i){
+    const t = ctx.currentTime, g = ctx.createGain(), oscs = [];
+    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(.06,t+1.6); g.connect(bus);
+    CH[i%CH.length].forEach((f,k)=>{ [0,6].forEach(det=>{
+      const o = ctx.createOscillator(), og = ctx.createGain();
+      o.type = k<2 ? 'sine' : 'triangle'; o.frequency.value = f; o.detune.value = det + Math.random()*4-2; og.gain.value = .16;
+      o.connect(og); og.connect(g); o.start(t); oscs.push(o);
+    }) });
+    const lfo = ctx.createOscillator(), lg = ctx.createGain();   /* slow breathing */
+    lfo.frequency.value = .12+Math.random()*.1; lg.gain.value = .014; lfo.connect(lg); lg.connect(g.gain); lfo.start(t); oscs.push(lfo);
+    return {g, oscs};
+  }
+  function stopVoice(v){
+    const t = ctx.currentTime; v.g.gain.cancelScheduledValues(t); v.g.gain.setValueAtTime(v.g.gain.value,t); v.g.gain.linearRampToValueAtTime(0,t+.9);
+    v.oscs.forEach(o=>{ try{o.stop(t+1)}catch(e){} }); setTimeout(()=>v.g.disconnect(),1200);
+  }
+  function ring(){                                   /* a soft bell now and then */
+    if(cur<0||!ctx) return;
+    const t = ctx.currentTime, f = CH[cur%CH.length][Math.floor(Math.random()*4)]*(Math.random()<.5?2:4), o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = 'sine'; o.frequency.value = f; g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(.045,t+.02); g.gain.exponentialRampToValueAtTime(.0001,t+3.2);
+    o.connect(g); g.connect(bus); o.start(t); o.stop(t+3.3);
+    chime = setTimeout(ring, 1400+Math.random()*2200);
+  }
+  return {
+    get cur(){ return cur }, get on(){ return on },
+    unlock(){ if(init() && ctx.state==='suspended') ctx.resume() },
+    play(i){ if(!on||!ctx||ctx.state!=='running'||i===cur) return;
+      if(voice) stopVoice(voice); clearTimeout(chime); cur = i; voice = start(i); chime = setTimeout(ring,700) },
+    stop(){ if(cur<0) return; clearTimeout(chime); cur = -1; if(voice){ stopVoice(voice); voice = null } },
+    toggle(){ on = !on; try{ localStorage.setItem('dc-sound', on?'on':'off') }catch(e){} if(on) this.unlock(); else this.stop(); return on }
+  };
+})();
+/* soft halo that glows behind a card on hover */
+const haloTex = (()=>{ const c = document.createElement('canvas'); c.width = c.height = 128; const x = c.getContext('2d'), g = x.createRadialGradient(64,64,6,64,64,64);
+  g.addColorStop(0,'rgba(170,200,255,.8)'); g.addColorStop(.5,'rgba(110,150,255,.28)'); g.addColorStop(1,'rgba(0,0,0,0)'); x.fillStyle = g; x.fillRect(0,0,128,128); return new THREE.CanvasTexture(c) })();
+
 /* poster planes */
 const meshes = [], loader = new THREE.TextureLoader();
 let loaded = 0;
-const done = () => { loaded++; $('pct').textContent = Math.round(loaded/N*100)+'%';
-  if(loaded>=N){ setTimeout(()=>{ $('loader').style.opacity=0; setTimeout(()=>$('loader').remove(),1000) },300) } };
+const t0 = performance.now();
+const done = () => { loaded++;
+  if(loaded>=N){ setTimeout(()=>{ $('loader').style.opacity=0; setTimeout(()=>$('loader').remove(),1000) }, Math.max(300, 2400-(performance.now()-t0))) } };
 PROJECTS.forEach((p,i)=>{
   const ph = placeholder(p,i);
   const tex = new THREE.CanvasTexture(ph);
@@ -270,6 +379,8 @@ PROJECTS.forEach((p,i)=>{
   const side = i%2?1:-1;
   m.userData = {i, p, bx: side*(2.2+Math.random()*.8), by:(Math.random()-.5)*1.6, s:1, ts:1, img:p.src, url:null, ph};
   m.position.set(m.userData.bx, m.userData.by, -i*GAP);
+  const halo = new THREE.Mesh(new THREE.PlaneGeometry(H*.75*1.7, H*1.55), new THREE.MeshBasicMaterial({map:haloTex,transparent:true,opacity:0,blending:THREE.AdditiveBlending,depthWrite:false,fog:false}));
+  halo.position.z = -.05; m.add(halo); m.userData.halo = halo;
   scene.add(m); meshes.push(m);
   loader.load(p.src, t=>{
     mat.map = t; mat.needsUpdate = true;
@@ -284,24 +395,24 @@ const maxZ = (N-1)*GAP;
 addEventListener('mousemove',e=>{mx=e.clientX/innerWidth*2-1; my=-(e.clientY/innerHeight*2-1)});
 addEventListener('wheel',e=>{target=Math.max(0,Math.min(maxZ+2,target+e.deltaY*.012))},{passive:true});
 let ty=null, moved=0;
-addEventListener('touchstart',e=>{ty=e.touches[0].clientY;moved=0; mx=e.touches[0].clientX/innerWidth*2-1; my=-(e.touches[0].clientY/innerHeight*2-1)},{passive:true});
-addEventListener('touchmove',e=>{const y=e.touches[0].clientY; moved+=Math.abs(ty-y); target=Math.max(0,Math.min(maxZ+2,target+(ty-y)*.03)); ty=y},{passive:true});
+addEventListener('touchstart',e=>{ty=e.touches[0].clientY;moved=0},{passive:true});
+addEventListener('touchend',()=>{mx=0;my=0},{passive:true});
+addEventListener('touchmove',e=>{const y=e.touches[0].clientY; moved+=Math.abs(ty-y); target=Math.max(0,Math.min(maxZ+2,target+(ty-y)*.025)); mx=(e.touches[0].clientX/innerWidth*2-1)*.5; ty=y},{passive:true});
 addEventListener('keydown',e=>{ if(/INPUT|TEXTAREA/.test(e.target.tagName)&&e.key!=='Escape')return; if(e.key==='ArrowDown')target=Math.min(maxZ+2,target+GAP); if(e.key==='ArrowUp')target=Math.max(0,target-GAP); if(e.key==='Escape'){ if($('zoom').classList.contains('on')) $('zoom').classList.remove('on'); else closeAll() }
   if($('view').classList.contains('on')){ if(e.key==='ArrowRight')openDetail(cur+1); if(e.key==='ArrowLeft')openDetail(cur-1) } });
 
 const ray = new THREE.Raycaster(), v2 = new THREE.Vector2();
-function pick(){ v2.set(mx,my); ray.setFromCamera(v2,camera);
+function pick(x=mx,y=my){ v2.set(x,y); ray.setFromCamera(v2,camera);
   const hit = ray.intersectObjects(meshes)[0]; return hit ? hit.object : null; }
 addEventListener('click',e=>{
   if(e.target.closest('header,.panel')||moved>10) return;
-  if(e.type==='click' && 'ontouchstart' in window){ mx=e.clientX/innerWidth*2-1; my=-(e.clientY/innerHeight*2-1) }
-  const m = pick(); if(!m) return;
-  if(busy) return; busy = true;
+  const m = pick(e.clientX/innerWidth*2-1, -(e.clientY/innerHeight*2-1)); if(!m) return;
+  if(busy) return; busy = true; soundHold = true; Snd.stop();
   const d = m.userData; d.s = .86; d.force = 1.28;
   setTimeout(()=>{ d.force = 0 }, 260);
   setTimeout(()=>{ openDetail(d.i); busy = false }, 430);
 });
-function closeAll(){ document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on')); if(/^#project-/.test(location.hash)) history.replaceState(null,'',location.pathname+location.search) }
+function closeAll(){ soundHold = false; document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on')); if(/^#project-/.test(location.hash)) history.replaceState(null,'',location.pathname+location.search) }
 let cur = 0;
 /* shows only the images that exist; hidden sections stay hidden until one image loads */
 function fillMedia(box, items, build){
@@ -378,31 +489,38 @@ function loop(){
   const t = clock.getElapsedTime();
   pos += (target-pos)*.06;
   camera.position.z += (6-pos-camera.position.z)*.12;
-  camera.position.x += (mx*1.4-camera.position.x)*.05;
+  camera.position.x += (mx*1.4*xs-camera.position.x)*.05;
   camera.position.y += (my*.9-camera.position.y)*.05;
   camera.lookAt(mx*.6, my*.4, camera.position.z-6);
   dots.rotation.z = t*.012;  dots.position.x = -mx*.6; dots.position.y = -my*.4;
 
-  const h = pick();
+  const h = isTouch ? pick(0,0) : pick();
   if(h!==hover){
     hover=h; document.body.style.cursor=h?'pointer':'default';
     const L=$('label'); if(h){L.querySelector('h2').textContent=h.userData.p.title; L.querySelector('p').textContent=(h.userData.p.type||'Project')+'  ·  '+h.userData.p.year; L.classList.add('on')} else L.classList.remove('on');
   }
+  const panelOpen = !!document.querySelector('.panel.on'), want = (hover && !soundHold && !panelOpen) ? hover.userData.i : -1;
+  if(want !== Snd.cur){ if(want < 0) Snd.stop(); else Snd.play(want) }
   meshes.forEach((m,i)=>{
     const d=m.userData, k = d.force || (m===hover?1.12:1);
     d.s += (k-d.s)*.1;
     const sx = d.sx||1;
-    m.scale.set(sx*d.s, d.s, 1);
+    m.scale.set(sx*d.s*ms, d.s*ms, 1);
     m.position.y = d.by + Math.sin(t*.8+i*1.7)*.18;
-    m.position.x = d.bx + Math.sin(t*.4+i)*.12;
+    m.position.x = d.bx*xs + Math.sin(t*.4+i)*.12*xs;
     m.rotation.y += ((-d.bx*.06 + mx*.25)-m.rotation.y)*.05;
     m.rotation.x += ((my*.12)-m.rotation.x)*.05;
+    /* hover: card floats toward you, sways gently and a halo glows behind it */
+    m.position.z += ((-i*GAP + (m===hover?.7:0)) - m.position.z)*.1;
+    m.rotation.z += ((m===hover ? Math.sin(t*2.6)*.025 : 0) - m.rotation.z)*.12;
+    const hm = d.halo.material; hm.opacity += ((m===hover?.6:0) - hm.opacity)*.1; d.halo.scale.setScalar(1+Math.sin(t*2)*.04);
   });
   $('bar').style.height = (pos/(maxZ+2)*100)+'vh';
   renderer.render(scene,camera);
 }
-loop();
-addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
+layout(); loop();
+addEventListener('resize',layout);
+if(isTouch) $('hint').innerHTML = 'Swipe to travel<br>Tap a project';
 
 /* each project has its own link (#project-1, #project-2 ...) and the browser Back button works */
 $('zoom').addEventListener('click', e=>{ e.stopImmediatePropagation(); $('zoom').classList.remove('on') }, true);
@@ -412,6 +530,17 @@ addEventListener('popstate', ()=>{
   else document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
 });
 { const m = location.hash.match(/^#project-(\d+)$/); if(m && PROJECTS[m[1]-1]) openDetail(m[1]-1, true) }
+
+document.querySelectorAll('.panel:not(#zoom)').forEach(pn=>{
+  const b = document.createElement('button'); b.className = 'pclose'; b.textContent = '✕'; b.setAttribute('aria-label','Close');
+  b.onclick = e=>{ e.stopPropagation(); closeAll() }; pn.appendChild(b);
+});
+
+/* sound: browsers only allow audio after a first click / tap / key press */
+['pointerdown','keydown','touchend','click'].forEach(ev=>addEventListener(ev,Snd.unlock,{passive:true}));
+$('nSound').classList.toggle('off',!Snd.on);
+$('nSound').onclick = ()=>{ $('nSound').classList.toggle('off',!Snd.toggle()) };
+document.addEventListener('visibilitychange',()=>{ if(document.hidden) Snd.stop() });
 </script>
 </body>
 </html>
