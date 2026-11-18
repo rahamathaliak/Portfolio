@@ -2,8 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Design Culture · Portfolio</title>
+<script>
+/* phones and small touch screens get their own mobile experience; laptops and desktops keep the 3D galaxy */
+window.IS_MOBILE = innerWidth<=820 || (matchMedia('(hover:none) and (pointer:coarse)').matches && innerWidth<=1100);
+document.documentElement.classList.toggle('mob', IS_MOBILE);
+</script>
 <style>
   :root{--accent:#ff7a45;--bg:#05060a;--bgrgb:5,6,10;--fg:#fff;--fgrgb:255,255,255;--card:#0d0f17}
   body,#loader{transition:background .5s,color .5s}
@@ -118,6 +123,63 @@
   }
   #nSound{font-size:16px;letter-spacing:0;margin-left:0}
   nav a.off{opacity:.35;text-decoration:line-through}
+
+  [hidden]{display:none!important}
+  html.mob header,html.mob #label,html.mob #hint,html.mob #bar,html.mob .panel{display:none!important}
+  #m{display:none}
+  html.mob,html.mob body{overflow:auto;height:auto;background:radial-gradient(ellipse at 15% 8%,rgba(60,80,170,.28),transparent 55%),radial-gradient(ellipse at 95% 55%,rgba(130,60,150,.2),transparent 50%) fixed,#05060a}
+  html.mob.lock,html.mob.lock body{overflow:hidden}
+  html.mob button,html.mob input,html.mob textarea{font-family:inherit}
+  html.mob #m{display:block;position:relative;min-height:100vh;min-height:100dvh;padding:calc(70px + env(safe-area-inset-top)) 16px calc(96px + env(safe-area-inset-bottom));color:#fff}
+  #mstars{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;touch-action:auto}
+  .mbar{position:fixed;top:0;left:0;right:0;z-index:5;padding:calc(16px + env(safe-area-inset-top)) 18px 22px;background:linear-gradient(#05060a 45%,transparent);font-weight:700;letter-spacing:.3em;font-size:13px}
+  .mh{position:relative;z-index:1;font-size:11px;letter-spacing:.3em;text-transform:uppercase;opacity:.55;margin:0 2px 14px}
+  #mfeed{position:relative;z-index:1;display:grid;gap:18px}
+  .mc{display:block;width:100%;aspect-ratio:4/5;padding:0;border:0;border-radius:22px;overflow:hidden;position:relative;background:#0d0f17;color:#fff;text-align:left;cursor:pointer;box-shadow:0 12px 40px rgba(0,0,0,.5);opacity:0;transform:translateY(26px);transition:opacity .6s,transform .6s;-webkit-tap-highlight-color:transparent}
+  .mc.in{opacity:1;transform:none}
+  .mc:active{transform:scale(.97)}
+  .mc img,.mc .mph{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .mc .mph{display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;font-size:24px;font-weight:300}
+  .mc .mt{position:absolute;left:0;right:0;bottom:0;padding:70px 18px 18px;background:linear-gradient(transparent,rgba(5,6,10,.92))}
+  .mc small{display:block;font-size:11px;letter-spacing:.2em;text-transform:uppercase;opacity:.75}
+  .mc h2{font-weight:300;font-size:27px;margin-top:4px}
+  .mtabs{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:6;display:flex;gap:6px;padding:6px;border-radius:999px;background:rgba(20,22,32,.86);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.14)}
+  .mtabs button{flex:1;min-height:48px;border:0;border-radius:999px;background:none;color:#fff;font-weight:700;font-size:12px;letter-spacing:.16em;text-transform:uppercase}
+  .mtabs button.on{background:var(--accent);color:#0b0c12}
+  .sheet{position:fixed;inset:0;z-index:10;overflow:auto;overscroll-behavior:contain;background:#05060a;color:#fff;padding:calc(10px + env(safe-area-inset-top)) 18px calc(40px + env(safe-area-inset-bottom));transform:translateY(100%);visibility:hidden;transition:transform .45s cubic-bezier(.2,.8,.2,1),visibility .45s}
+  .sheet.open{transform:none;visibility:visible}
+  .sback{position:sticky;top:calc(8px + env(safe-area-inset-top));z-index:3;min-height:46px;padding:0 20px;margin-bottom:14px;border-radius:999px;border:1px solid rgba(255,255,255,.28);background:rgba(5,6,10,.75);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:#fff;font-weight:700;font-size:12px;letter-spacing:.15em;text-transform:uppercase}
+  .sh h1{font-weight:300;font-size:32px;margin:18px 0 8px;letter-spacing:.02em}
+  .sh h3{font-size:11px;letter-spacing:.3em;text-transform:uppercase;opacity:.55;font-weight:400;margin:30px 0 10px}
+  .sh p{font-weight:300;line-height:1.8;font-size:16px;opacity:.92;margin-bottom:12px}
+  .sh a{color:#fff}
+  .cov{width:100%;display:block;border-radius:18px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 0}
+  .chips span{padding:8px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.22);font-size:12px}
+  .sg{display:grid;gap:14px}
+  .sg img{width:100%;display:block;border-radius:14px}
+  .sg figcaption{font-size:13px;opacity:.75;padding-top:8px}
+  .mstep{padding:12px;border:1px solid rgba(255,255,255,.12);border-radius:16px;background:rgba(255,255,255,.04)}
+  .mstep img{width:100%;display:block;border-radius:10px;margin-bottom:10px}
+  .mstep b{font-size:11px;letter-spacing:.25em;opacity:.55;font-weight:400}
+  .mstep h4{font-weight:400;font-size:18px;margin:4px 0}
+  .mstep p{font-size:14px;line-height:1.7;opacity:.85;margin:0}
+  .mph2{aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;text-align:center;padding:12px;font-size:12px;opacity:.7;border:1px dashed rgba(255,255,255,.28);border-radius:12px;word-break:break-all}
+  .mlnk,.mbtns button{display:flex;align-items:center;justify-content:center;min-height:50px;border-radius:999px;font-weight:700;font-size:12px;letter-spacing:.16em;text-transform:uppercase;text-decoration:none;cursor:pointer}
+  .mlnk{margin-top:22px;border:0;background:var(--accent);color:#0b0c12!important;width:100%}
+  .mbtns{display:flex;gap:10px;margin-top:36px}
+  .mbtns button{flex:1;background:none;color:#fff;border:1px solid rgba(255,255,255,.3)}
+  .crow{margin:20px 0}
+  .crow a,.crow div{display:block;padding:15px 16px;margin-bottom:10px;border:1px solid rgba(255,255,255,.2);border-radius:14px;text-decoration:none;color:#fff;font-size:16px}
+  .crow small{display:block;font-size:10px;letter-spacing:.25em;text-transform:uppercase;opacity:.55;margin-bottom:4px}
+  .sheet form{display:grid;gap:12px}
+  .sheet input,.sheet textarea{width:100%;background:transparent;color:#fff;border:1px solid rgba(255,255,255,.28);border-radius:12px;padding:14px;font-size:16px;outline:none}
+  .sheet input:focus,.sheet textarea:focus{border-color:var(--accent)}
+  .socs{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+  .socs a{padding:11px 18px;border:1px solid rgba(255,255,255,.3);border-radius:999px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;text-decoration:none}
+  #mz{position:fixed;inset:0;z-index:20;background:rgba(5,6,10,.96);display:flex;align-items:center;justify-content:center}
+  #mz img{max-width:96vw;max-height:92vh}
+  @media(prefers-reduced-motion:reduce){.mc,.sheet{transition:none}.mc{opacity:1;transform:none}}
 </style>
 </head>
 <body>
@@ -177,9 +239,14 @@
   <p style="margin-top:18px"><a href="mailto:rahamathali.ak@gmail.com">rahamathali.ak@gmail.com</a></p>
 </div></div>
 
+<div id="m"><canvas id="mstars" aria-hidden="true"></canvas>
+  <div class="mbar">DESIGN CULTURE</div>
+  <main><p class="mh">Selected projects</p><div id="mfeed"></div></main>
+  <nav class="mtabs" aria-label="Main menu"><button data-t="work" class="on">Work</button><button data-t="about">About</button><button data-t="contact">Contact</button></nav>
+</div>
 <div class="panel" id="zoom"><img id="zimg" alt=""></div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>if(!IS_MOBILE) document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>')</script>
 <script>
 /* ============ EDIT THIS LIST: your projects ============
    Each card in the galaxy is one project and opens its own project page.
@@ -261,6 +328,85 @@ PROJECTS.forEach((p,i)=>{
 });
 /* ====================================================== */
 
+</script>
+<script>
+(function(){
+if(!window.IS_MOBILE) return;
+const $=id=>document.getElementById(id), P=PROJECTS, C=CONTACT, R=document.documentElement, RM=matchMedia('(prefers-reduced-motion:reduce)').matches;
+const esc=t=>String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const root=$('m'), tabs=[...root.querySelectorAll('.mtabs button')], BACK='<button class="sback" data-x>← Back</button>';
+let open=null, cur=0;
+const tab=n=>tabs.forEach(b=>b.classList.toggle('on',b.dataset.t===n));
+const mk=(label)=>{const s=document.createElement('section');s.className='sheet sh';s.setAttribute('role','dialog');s.setAttribute('aria-modal','true');s.setAttribute('aria-label',label);root.appendChild(s);return s};
+const sp=mk('Project'), sa=mk('About'), sc=mk('Contact');
+const z=document.createElement('div'); z.id='mz'; z.hidden=true; z.setAttribute('role','dialog'); z.setAttribute('aria-label','Image'); z.innerHTML='<img alt="">'; root.appendChild(z); z.onclick=()=>{z.hidden=true};
+
+/* ---- project feed ---- */
+const feed=$('mfeed');
+feed.innerHTML=P.map((p,i)=>'<button class="mc" aria-label="Open '+esc(p.title)+'"><img alt="" src="'+esc(p.src)+'"><div class="mt"><small>'+esc(p.type||'Project')+' · '+esc(p.year)+'</small><h2>'+esc(p.title)+'</h2></div></button>').join('');
+const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target) } }),{threshold:.1});
+[...feed.children].forEach((b,i)=>{
+  const im=b.querySelector('img');
+  im.onerror=()=>{ const d=document.createElement('div'); d.className='mph'; d.style.background='linear-gradient(135deg,hsl('+((i*47+210)%360)+',65%,38%),hsl('+((i*47+270)%360)+',70%,14%))'; d.textContent=P[i].title; im.replaceWith(d) };
+  b.onclick=()=>go('#project-'+(i+1)); io.observe(b);
+});
+
+/* ---- about + contact ---- */
+sa.innerHTML=BACK+document.querySelector('#about .about').innerHTML;
+const rows=[['Email',C.email&&'mailto:'+C.email,C.email],['Phone',C.phone&&'tel:'+C.phone.replace(/\s/g,''),C.phone],['Location','',C.location]].filter(r=>r[2])
+  .map(r=>{const t='<small>'+r[0]+'</small>'+esc(r[2]); return r[1]?'<a href="'+esc(r[1])+'">'+t+'</a>':'<div>'+t+'</div>'}).join('');
+sc.innerHTML=BACK+'<h1>'+esc(C.heading)+'</h1><p>'+esc(C.intro)+'</p><div class="crow">'+rows+'</div><form id="mform"><input id="mn" placeholder="Your name" autocomplete="name" required><input id="me" type="email" placeholder="Your email" autocomplete="email" required><textarea id="mm" rows="4" placeholder="Tell me about your project" required></textarea><button class="mlnk" type="submit">Send message</button></form><div class="socs">'+C.links.map(l=>'<a href="'+esc(l.url)+'" target="_blank" rel="noopener">'+esc(l.name)+'</a>').join('')+'</div>';
+$('mform').onsubmit=e=>{ e.preventDefault(); const n=$('mn').value; location.href='mailto:'+C.email+'?subject='+encodeURIComponent('Portfolio enquiry from '+n)+'&body='+encodeURIComponent($('mm').value+'\n\n- '+n+' ('+$('me').value+')') };
+
+/* ---- project page ---- */
+function fill(box,items,build,title){
+  const sec=document.createElement('div'), g=document.createElement('div'); sec.hidden=!SHOW_EMPTY_SLOTS; sec.innerHTML='<h3>'+title+'</h3>'; g.className='sg'; sec.appendChild(g); box.appendChild(sec);
+  items.forEach(it=>{ const c=build(it), im=c.querySelector('img');
+    im.onload=()=>{ sec.hidden=false };
+    im.onerror=()=>{ if(SHOW_EMPTY_SLOTS){ const d=document.createElement('div'); d.className='mph2'; d.textContent='+ Add image: '+it.src; im.replaceWith(d) } else c.remove() };
+    g.appendChild(c); im.src=it.src });
+}
+function render(i){
+  cur=(i+P.length)%P.length; const p=P[cur];
+  const meta=[['Type',p.type],['Year',p.year],['Client',p.client],['Role',p.role],['Tools',p.tools]].filter(r=>r[1]);
+  sp.innerHTML=BACK+'<img class="cov" alt="'+esc(p.title)+'" src="'+esc(p.src)+'"><h1>'+esc(p.title)+'</h1><div class="chips">'+meta.map(r=>'<span>'+esc(r[0])+': '+esc(r[1])+'</span>').join('')+'</div><h3>About the project</h3><p>'+esc(p.about)+'</p><h3>Idea &amp; process</h3><p>'+esc(p.process)+'</p>'+(p.link&&p.link.url?'<a class="mlnk" href="'+esc(p.link.url)+'" target="_blank" rel="noopener">'+esc(p.link.label||'View project')+' ↗</a>':'')+'<div id="mg"></div><div id="ms"></div><div class="mbtns"><button data-prev>← Prev</button><button data-next>Next →</button></div>';
+  sp.querySelector('.cov').onerror=function(){ this.remove() };
+  fill($('mg'),p.gallery||[],it=>{ const f=document.createElement('figure'), im=document.createElement('img'); im.alt=it.caption||p.title; im.onclick=()=>{ z.firstChild.src=im.src; z.hidden=false }; f.appendChild(im);
+    if(it.caption){ const c=document.createElement('figcaption'); c.textContent=it.caption; f.appendChild(c) } return f },'Project images');
+  fill($('ms'),(p.steps||[]).map((st,k)=>({src:st.img,k,st})),it=>{ const c=document.createElement('div'); c.className='mstep';
+    c.innerHTML='<img alt=""><b>STEP '+String(it.k+1).padStart(2,'0')+'</b><h4></h4><p></p>'; c.querySelector('h4').textContent=it.st.title; c.querySelector('p').textContent=it.st.text; return c },'Step by step process');
+  sp.scrollTop=0; openS(sp,'work');
+}
+
+/* ---- sheets + history (the phone's Back button closes a page) ---- */
+function openS(s,t){ const was=open===s; if(open&&!was) open.classList.remove('open'); open=s; s.classList.add('open'); if(!was&&s!==sp) s.scrollTop=0; R.classList.add('lock'); tab(t);
+  if(!was){ const b=s.querySelector('[data-x]'); if(b) setTimeout(()=>b.focus({preventScroll:true}),480) } }
+function closeUI(){ if(open){ open.classList.remove('open'); open=null } z.hidden=true; R.classList.remove('lock'); tab('work') }
+function route(){ const h=location.hash, m=h.match(/^#project-(\d+)$/);
+  if(m&&P[m[1]-1]) render(m[1]-1); else if(h==='#about') openS(sa,'about'); else if(h==='#contact') openS(sc,'contact'); else closeUI() }
+function go(h){ history.pushState({m:1},'',h); route() }
+function back(){ if(history.state&&history.state.m) history.back(); else { history.replaceState(null,'',location.pathname+location.search); route() } }
+function step(d){ history.replaceState({m:1},'','#project-'+(((cur+d+P.length)%P.length)+1)); route() }
+root.addEventListener('click',e=>{ const t=e.target.closest('button'); if(!t) return;
+  if(t.hasAttribute('data-x')) back(); else if(t.hasAttribute('data-prev')) step(-1); else if(t.hasAttribute('data-next')) step(1);
+  else if(t.dataset.t==='work'){ if(open) back(); else scrollTo({top:0,behavior:RM?'auto':'smooth'}) }
+  else if(t.dataset.t==='about') go('#about'); else if(t.dataset.t==='contact') go('#contact') });
+addEventListener('popstate',route);
+addEventListener('keydown',e=>{ if(e.key==='Escape'){ if(!z.hidden) z.hidden=true; else if(open) back() } });
+
+/* ---- soft twinkling stars (cheap 2D canvas) ---- */
+const cv=$('mstars'), cx=cv.getContext('2d'); let W,H,st=[];
+function size(){ W=cv.width=innerWidth; H=cv.height=innerHeight; st=Array.from({length:110},()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.2+.3,s:Math.random()*.5+.1,p:Math.random()*6})); draw(0,true) }
+function draw(t,once){ cx.clearRect(0,0,W,H); cx.fillStyle='#cfe0ff'; st.forEach(a=>{ cx.globalAlpha=.35+.65*Math.abs(Math.sin(t/1500*a.s+a.p)); cx.beginPath(); cx.arc(a.x,a.y,a.r,0,7); cx.fill() }); if(!once&&!RM) requestAnimationFrame(draw) }
+size(); addEventListener('resize',size); if(!RM) requestAnimationFrame(draw);
+
+/* ---- loading screen, then open straight to a deep link if there is one ---- */
+setTimeout(()=>{ const L=$('loader'); if(L){ L.style.opacity=0; setTimeout(()=>L.remove(),1000) } },2000);
+route();
+})();
+</script>
+<script>
+if(!IS_MOBILE){
 const $ = id => document.getElementById(id);
 const N = PROJECTS.length, GAP = 4.2, H = 3.4;
 const scene = new THREE.Scene();
@@ -541,6 +687,8 @@ document.querySelectorAll('.panel:not(#zoom)').forEach(pn=>{
 $('nSound').classList.toggle('off',!Snd.on);
 $('nSound').onclick = ()=>{ $('nSound').classList.toggle('off',!Snd.toggle()) };
 document.addEventListener('visibilitychange',()=>{ if(document.hidden) Snd.stop() });
+
+}
 </script>
 </body>
 </html>
